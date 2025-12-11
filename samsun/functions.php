@@ -121,6 +121,11 @@ add_action( 'widgets_init', 'samsun_widgets_init' );
 function samsun_scripts() {
     wp_enqueue_style( 'samsun-style', get_stylesheet_uri(), array(), SAMSUN_VERSION );
     wp_enqueue_style( 'samsun-main', get_template_directory_uri() . '/assets/css/main.css', array(), SAMSUN_VERSION );
+    
+    // Ana sayfa için özel CSS
+    if ( is_front_page() ) {
+        wp_enqueue_style( 'samsun-front-page', get_template_directory_uri() . '/assets/css/front-page.css', array(), SAMSUN_VERSION );
+    }
 
     wp_enqueue_script( 'samsun-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), SAMSUN_VERSION, true );
     wp_enqueue_script( 'samsun-main', get_template_directory_uri() . '/assets/js/main.js', array( 'jquery' ), SAMSUN_VERSION, true );
@@ -283,6 +288,220 @@ function samsun_entry_footer() {
             printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', 'samsun' ) . '</span>', $tags_list );
         }
     }
+}
+
+/**
+ * Post Views Counter
+ */
+function samsun_set_post_views( $post_id ) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta( $post_id, $count_key, true );
+    
+    if ( $count == '' ) {
+        $count = 0;
+        delete_post_meta( $post_id, $count_key );
+        add_post_meta( $post_id, $count_key, '0' );
+    } else {
+        $count++;
+        update_post_meta( $post_id, $count_key, $count );
+    }
+}
+
+function samsun_get_post_views( $post_id ) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta( $post_id, $count_key, true );
+    
+    if ( $count == '' ) {
+        delete_post_meta( $post_id, $count_key );
+        add_post_meta( $post_id, $count_key, '0' );
+        return '0';
+    }
+    
+    return $count;
+}
+
+// Track views on single posts
+function samsun_track_post_views( $post_id ) {
+    if ( ! is_single() ) return;
+    if ( empty( $post_id ) ) {
+        global $post;
+        $post_id = $post->ID;
+    }
+    samsun_set_post_views( $post_id );
+}
+add_action( 'wp_head', 'samsun_track_post_views' );
+
+/**
+ * Add Default Categories on Theme Activation
+ */
+function samsun_create_default_categories() {
+    // Check if categories already exist
+    if ( get_option( 'samsun_default_categories_created' ) ) {
+        return;
+    }
+
+    $default_categories = array(
+        'Futbol' => array(
+            'slug'        => 'futbol',
+            'description' => 'Futbol haberleri ve maç sonuçları',
+        ),
+        'Basketbol' => array(
+            'slug'        => 'basketbol',
+            'description' => 'Basketbol haberleri ve skorlar',
+        ),
+        'Voleybol' => array(
+            'slug'        => 'voleybol',
+            'description' => 'Voleybol haberleri',
+        ),
+        'Transfer' => array(
+            'slug'        => 'transfer',
+            'description' => 'Transfer haberleri ve dedikodular',
+        ),
+        'Samsunspor' => array(
+            'slug'        => 'samsunspor',
+            'description' => 'Samsunspor haberleri',
+        ),
+        'Yerel Haberler' => array(
+            'slug'        => 'yerel-haberler',
+            'description' => 'Samsun yerel spor haberleri',
+        ),
+    );
+
+    foreach ( $default_categories as $cat_name => $cat_data ) {
+        if ( ! term_exists( $cat_name, 'category' ) ) {
+            wp_insert_term(
+                $cat_name,
+                'category',
+                array(
+                    'slug'        => $cat_data['slug'],
+                    'description' => $cat_data['description'],
+                )
+            );
+        }
+    }
+
+    update_option( 'samsun_default_categories_created', true );
+}
+add_action( 'after_switch_theme', 'samsun_create_default_categories' );
+
+/**
+ * Create Default Pages on Theme Activation
+ */
+function samsun_create_default_pages() {
+    // Check if pages already exist
+    if ( get_option( 'samsun_default_pages_created' ) ) {
+        return;
+    }
+
+    $default_pages = array(
+        array(
+            'post_title'   => 'Ana Sayfa',
+            'post_content' => '',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_name'    => 'ana-sayfa',
+        ),
+        array(
+            'post_title'   => 'Hakkımızda',
+            'post_content' => 'Samsunspor ve Samsun spor haberleri hakkında bilgi.',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_name'    => 'hakkimizda',
+        ),
+        array(
+            'post_title'   => 'İletişim',
+            'post_content' => 'Bizimle iletişime geçin.',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_name'    => 'iletisim',
+        ),
+        array(
+            'post_title'   => 'Gizlilik Politikası',
+            'post_content' => 'Gizlilik politikamız.',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_name'    => 'gizlilik-politikasi',
+        ),
+    );
+
+    foreach ( $default_pages as $page_data ) {
+        // Check if page doesn't exist
+        $page_check = get_page_by_title( $page_data['post_title'] );
+        if ( ! isset( $page_check->ID ) ) {
+            $page_id = wp_insert_post( $page_data );
+            
+            // Set Ana Sayfa as front page
+            if ( $page_data['post_name'] === 'ana-sayfa' ) {
+                update_option( 'page_on_front', $page_id );
+                update_option( 'show_on_front', 'page' );
+            }
+        }
+    }
+
+    update_option( 'samsun_default_pages_created', true );
+}
+add_action( 'after_switch_theme', 'samsun_create_default_pages' );
+
+/**
+ * Add Reading Time
+ */
+function samsun_reading_time() {
+    $content = get_post_field( 'post_content', get_the_ID() );
+    $word_count = str_word_count( strip_tags( $content ) );
+    $reading_time = ceil( $word_count / 200 );
+
+    return $reading_time . ' dk okuma';
+}
+
+/**
+ * Related Posts
+ */
+function samsun_related_posts( $post_id, $limit = 4 ) {
+    $categories = wp_get_post_categories( $post_id );
+    
+    if ( empty( $categories ) ) {
+        return;
+    }
+
+    $args = array(
+        'category__in'   => $categories,
+        'post__not_in'   => array( $post_id ),
+        'posts_per_page' => $limit,
+        'orderby'        => 'rand',
+    );
+
+    $related_query = new WP_Query( $args );
+
+    if ( $related_query->have_posts() ) :
+        echo '<section class="related-posts">';
+        echo '<h3 class="related-title">İlgili Haberler</h3>';
+        echo '<div class="related-posts-grid">';
+
+        while ( $related_query->have_posts() ) : $related_query->the_post();
+            ?>
+            <article class="related-post-item">
+                <?php if ( has_post_thumbnail() ) : ?>
+                    <div class="related-post-image">
+                        <a href="<?php the_permalink(); ?>">
+                            <?php the_post_thumbnail( 'medium' ); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+                <div class="related-post-content">
+                    <h4 class="related-post-title">
+                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    </h4>
+                    <span class="related-post-date"><?php echo get_the_date(); ?></span>
+                </div>
+            </article>
+            <?php
+        endwhile;
+
+        echo '</div>';
+        echo '</section>';
+
+        wp_reset_postdata();
+    endif;
 }
 
 /**

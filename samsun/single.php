@@ -19,6 +19,9 @@ get_header();
 
                     get_template_part( 'template-parts/content', 'single' );
 
+                    // İlgili Haberler
+                    samsun_related_posts( get_the_ID(), 4 );
+
                     the_post_navigation(
                         array(
                             'prev_text' => '<span class="nav-subtitle">' . esc_html__( 'Önceki:', 'samsun' ) . '</span> <span class="nav-title">%title</span>',
