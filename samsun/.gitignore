@@ -1,0 +1,22 @@
+# WordPress
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.log
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.bak
+*.cache

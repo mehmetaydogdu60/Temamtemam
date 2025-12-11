@@ -1,0 +1,63 @@
+<svg width="1200" height="900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#f8f9fa"/>
+  
+  <!-- Header -->
+  <rect width="1200" height="80" fill="#ffffff"/>
+  <rect x="0" y="80" width="1200" height="2" fill="#e0e0e0"/>
+  
+  <!-- Logo Area -->
+  <text x="50" y="50" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#e30613">SAMSUN</text>
+  <text x="200" y="50" font-family="Arial, sans-serif" font-size="16" fill="#666">samsunsporluyuz.com</text>
+  
+  <!-- Navigation -->
+  <text x="900" y="50" font-family="Arial, sans-serif" font-size="16" fill="#1a1a1a">Ana Sayfa</text>
+  <text x="1000" y="50" font-family="Arial, sans-serif" font-size="16" fill="#1a1a1a">Haber</text>
+  <text x="1070" y="50" font-family="Arial, sans-serif" font-size="16" fill="#1a1a1a">İletişim</text>
+  
+  <!-- Content Area -->
+  <g transform="translate(50, 120)">
+    <!-- Main Content -->
+    <g>
+      <!-- Post 1 -->
+      <rect width="750" height="400" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+      <rect width="750" height="200" rx="8 8 0 0" fill="#e0e0e0"/>
+      <text x="20" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1a1a1a">Son Dakika Haberi</text>
+      <text x="20" y="270" font-family="Arial, sans-serif" font-size="14" fill="#666">12 Aralık 2024 • Yazar Adı</text>
+      <text x="20" y="300" font-family="Arial, sans-serif" font-size="16" fill="#333">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</text>
+      <rect x="20" y="350" width="120" height="40" rx="4" fill="#e30613"/>
+      <text x="50" y="375" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">Devamını Oku</text>
+    </g>
+    
+    <!-- Sidebar -->
+    <g transform="translate(800, 0)">
+      <!-- Widget 1 -->
+      <rect width="300" height="150" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+      <text x="20" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1a1a1a">Son Yazılar</text>
+      <line x1="20" y1="40" x2="280" y2="40" stroke="#e30613" stroke-width="3"/>
+      <text x="20" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666">• Yazı Başlığı 1</text>
+      <text x="20" y="95" font-family="Arial, sans-serif" font-size="14" fill="#666">• Yazı Başlığı 2</text>
+      <text x="20" y="120" font-family="Arial, sans-serif" font-size="14" fill="#666">• Yazı Başlığı 3</text>
+    </g>
+  </g>
+  
+  <!-- Footer -->
+  <rect y="800" width="1200" height="100" fill="#1a1a1a"/>
+  <text x="600" y="850" font-family="Arial, sans-serif" font-size="14" fill="#999" text-anchor="middle">© 2024 Samsunsporluyuz.com - Tüm hakları saklıdır.</text>
+  <text x="600" y="870" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">Tema: Samsun - Dedicode</text>
+  
+  <!-- Shadow filter -->
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
