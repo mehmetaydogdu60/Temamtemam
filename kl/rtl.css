@@ -1,0 +1,68 @@
+/*
+Theme Name: Samsun
+RTL Stylesheet
+*/
+
+body {
+    direction: rtl;
+    unicode-bidi: embed;
+}
+
+.site-header {
+    direction: ltr;
+}
+
+.header-container {
+    flex-direction: row-reverse;
+}
+
+.main-navigation li {
+    margin-left: 0;
+    margin-right: 2rem;
+}
+
+.main-navigation .sub-menu {
+    left: auto;
+    right: 0;
+}
+
+.entry-meta span {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+.widget a:hover {
+    padding-left: 0;
+    padding-right: 10px;
+}
+
+.alignleft {
+    float: right;
+    margin-right: 0;
+    margin-left: 1.5rem;
+}
+
+.alignright {
+    float: left;
+    margin-left: 0;
+    margin-right: 1.5rem;
+}
+
+.read-more:hover {
+    transform: translateX(-5px);
+}
+
+.back-to-top {
+    right: auto;
+    left: 30px;
+}
+
+.sticky {
+    border-left: none;
+    border-right: 4px solid var(--primary-color);
+}
+
+.page-header {
+    border-left: none;
+    border-right: 4px solid var(--primary-color);
+}
